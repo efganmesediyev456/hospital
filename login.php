@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/animations.css">  
-    <link rel="stylesheet" href="css/main.css">  
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/login.css">
-        
+
     <title>Login</title>
 
-    
-    
+
+
 </head>
 <body>
+<p>salammmmmmmar</p>
     <?php
 
     //learn from w3schools.com
@@ -23,18 +24,18 @@
 
     $_SESSION["user"]="";
     $_SESSION["usertype"]="";
-    
+
     // Set the new timezone
     date_default_timezone_set('Asia/Kolkata');
     $date = date('Y-m-d');
 
     $_SESSION["date"]=$date;
-    
+
 
     //import database
     include("connection.php");
 
-    
+
 
 
 
@@ -42,7 +43,7 @@
 
         $email=$_POST['useremail'];
         $password=$_POST['userpassword'];
-        
+
         $error='<label for="promter" class="form-label"></label>';
 
         $result= $database->query("select * from webuser where email='$email'");
@@ -57,7 +58,7 @@
                     //   Patient dashbord
                     $_SESSION['user']=$email;
                     $_SESSION['usertype']='p';
-                    
+
                     header('location: patient/index.php');
 
                 }else{
@@ -73,7 +74,7 @@
                     //   Admin dashbord
                     $_SESSION['user']=$email;
                     $_SESSION['usertype']='a';
-                    
+
                     header('location: admin/index.php');
 
                 }else{
@@ -97,7 +98,7 @@
                 }
 
             }
-            
+
         }else{
             $error='<label for="promter" class="form-label" style="color:rgb(255, 62, 62);text-align:center;">We cant found any acount for this email.</label>';
         }
@@ -107,7 +108,7 @@
 
 
 
-        
+
     }else{
         $error='<label for="promter" class="form-label">&nbsp;</label>';
     }
@@ -176,10 +177,10 @@
                     <br><br><br>
                 </td>
             </tr>
-                        
-                        
-    
-                        
+
+
+
+
                     </form>
         </table>
 
