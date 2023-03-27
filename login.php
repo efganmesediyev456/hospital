@@ -14,7 +14,7 @@
 
 </head>
 <body>
-<p>salammmmmmmar</p>
+
     <?php
 
     //learn from w3schools.com
