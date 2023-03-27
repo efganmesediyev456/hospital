@@ -4,21 +4,70 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/animations.css">  
-    <link rel="stylesheet" href="../css/main.css">  
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/admin.css">
-        
+    <script src="jquery.js"></script>
+
     <title>Appointments</title>
     <style>
-        .popup{
-            animation: transitionIn-Y-bottom 0.5s;
+        .review > *, .stars > *{
+            height: 30px;
         }
-        .sub-table{
-            animation: transitionIn-Y-bottom 0.5s;
+        .review .star {
+            fill:#808080;
         }
-</style>
+
+        .comments{
+            margin-top:12px;
+            border-top:1px solid #f39c12;
+            border-bottom:1px solid #f39c12;
+            padding: 12px 0;
+        }
+        .comments p{
+            color:black;
+            margin: 0;
+            padding: 0;
+        }
+
+        .textarea {
+            padding: 10px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+            box-shadow: inset 0 1px 3px #ddd;
+            transition: border-color 0.3s ease-in-out;
+            margin-bottom: 12px;
+        }
+
+        .textarea:focus {
+            border-color: #f39c12;
+            outline: none;
+            box-shadow: inset 0 1px 3px #ddd, 0 0 8px #f39c12;
+        }
+
+
+        .comment_form input[type='submit'] {
+            padding: 10px 20px;
+            background-color: #f39c12;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .comment_form input[type='submit']:hover {
+            background-color: #e67e22;
+        }
+
+    </style>
+
 </head>
 <body>
+
+
     <?php
 
     //learn from w3schools.com
@@ -35,7 +84,7 @@
     }else{
         header("location: ../login.php");
     }
-    
+
 
     //import database
     include("../connection.php");
@@ -54,26 +103,26 @@
 
 
     //TODO
-    $sqlmain= "select appointment.appoid,schedule.scheduleid,schedule.title,doctor.docname,patient.pname,schedule.scheduledate,schedule.scheduletime,appointment.apponum,appointment.appodate from schedule inner join appointment on schedule.scheduleid=appointment.scheduleid inner join patient on patient.pid=appointment.pid inner join doctor on schedule.docid=doctor.docid  where  patient.pid=$userid ";
+    $sqlmain= "select appointment.status, appointment.appoid,schedule.scheduleid,schedule.title,doctor.docname,patient.pname,schedule.scheduledate,schedule.scheduletime,appointment.apponum,appointment.appodate from schedule inner join appointment on schedule.scheduleid=appointment.scheduleid inner join patient on patient.pid=appointment.pid inner join doctor on schedule.docid=doctor.docid  where  patient.pid=$userid ";
 
     if($_POST){
         //print_r($_POST);
-        
 
 
-        
+
+
         if(!empty($_POST["sheduledate"])){
             $sheduledate=$_POST["sheduledate"];
             $sqlmain.=" and schedule.scheduledate='$sheduledate' ";
         };
 
-    
+
 
         //echo $sqlmain;
 
     }
 
-    $sqlmain.="order by appointment.appodate  asc";
+    $sqlmain.="order by appointment.appodate  desc";
     $result= $database->query($sqlmain);
     ?>
     <div class="container">
@@ -109,7 +158,7 @@
                         <a href="doctors.php" class="non-style-link-menu"><div><p class="menu-text">All Doctors</p></a></div>
                     </td>
                 </tr>
-                
+
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-session">
                         <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">Scheduled Sessions</p></div></a>
@@ -125,7 +174,7 @@
                         <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">Settings</p></a></div>
                     </td>
                 </tr>
-                
+
             </table>
         </div>
         <div class="dash-body">
@@ -136,21 +185,21 @@
                     </td>
                     <td>
                         <p style="font-size: 23px;padding-left:12px;font-weight: 600;">My Bookings history</p>
-                                           
+
                     </td>
                     <td width="15%">
                         <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: right;">
                             Today's Date
                         </p>
                         <p class="heading-sub12" style="padding: 0;margin: 0;">
-                            <?php 
+                            <?php
 
                         date_default_timezone_set('Asia/Kolkata');
 
                         $today = date('Y-m-d');
                         echo $today;
 
-                        
+
                         ?>
                         </p>
                     </td>
@@ -160,7 +209,7 @@
 
 
                 </tr>
-               
+
                 <!-- <tr>
                     <td colspan="4" >
                         <div style="display: flex;margin-top: 40px;">
@@ -172,10 +221,10 @@
                 </tr> -->
                 <tr>
                     <td colspan="4" style="padding-top:10px;width: 100%;" >
-                    
+
                         <p class="heading-main12" style="margin-left: 45px;font-size:18px;color:rgb(49, 49, 49)">My Bookings (<?php echo $result->num_rows; ?>)</p>
                     </td>
-                    
+
                 </tr>
                 <tr>
                     <td colspan="4" style="padding-top:0px;width: 100%;" >
@@ -184,17 +233,17 @@
                         <tr>
                            <td width="10%">
 
-                           </td> 
+                           </td>
                         <td width="5%" style="text-align: center;">
                         Date:
                         </td>
                         <td width="30%">
                         <form action="" method="post">
-                            
+
                             <input type="date" name="sheduledate" id="date" class="input-text filter-container-items" style="margin: 0;width: 95%;">
 
                         </td>
-                        
+
                     <td width="12%">
                         <input type="submit"  name="filter" value=" Filter" class=" btn-primary-soft btn button-icon btn-filter"  style="padding: 15px; margin :0;width:100%">
                         </form>
@@ -205,23 +254,23 @@
 
                         </center>
                     </td>
-                    
+
                 </tr>
-                
-               
-                  
+
+
+
                 <tr>
                    <td colspan="4">
                        <center>
                         <div class="abc scroll">
                         <table width="93%" class="sub-table scrolldown" border="0" style="border:none">
-                        
+
                         <tbody>
-                        
+
                             <?php
 
-                                
-                                
+
+
 
                                 if($result->num_rows==0){
                                     echo '<tr>
@@ -238,13 +287,13 @@
                                     <br><br><br><br>
                                     </td>
                                     </tr>';
-                                    
+
                                 }
                                 else{
 
                                     for ( $x=0; $x<($result->num_rows);$x++){
                                         echo "<tr>";
-                                        for($q=0;$q<3;$q++){
+                                        for($q=0;$q<1;$q++){
                                             $row=$result->fetch_assoc();
                                             if (!isset($row)){
                                             break;
@@ -257,12 +306,14 @@
                                             $apponum=$row["apponum"];
                                             $appodate=$row["appodate"];
                                             $appoid=$row["appoid"];
-    
+                                            $status=$row["status"];
+
                                             if($scheduleid==""){
                                                 break;
                                             }
-    
-                                            echo '
+
+                                            if($status==0){
+                                                echo '
                                             <td style="width: 25%;">
                                                     <div  class="dashboard-items search-items"  >
                                                     
@@ -287,14 +338,134 @@
                                                                 </div>
                                                                 <br>
                                                                 <a href="?action=drop&id='.$appoid.'&title='.$title.'&doc='.$docname.'" ><button  class="login-btn btn-primary-soft btn "  style="padding-top:11px;padding-bottom:11px;width:100%"><font class="tn-in-text">Cancel Booking</font></button></a>
+                                                                
                                                         </div>
                                                                 
                                                     </div>
                                                 </td>';
-    
+
+                                            }else{
+
+
+
+                                                $sql='select * from comment where appo_id='.$appoid.' order by id desc';
+                                                $query=$database->query($sql);
+                                                $arr='';
+                                                while ($row=$query->fetch_assoc()){
+                                                    $arr.='<div class="comments">';
+
+                                                    $arr.='<div class="stars" style="text-align: left">';
+                                                    for($a=0;$a<$row['stars'];$a++){
+                                                        $arr.='<svg style="fill:#f39c12;" class="star" id="1" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" >
+                                                                                     <polygon points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566"></polygon>
+                                                                                 </svg>';
+
+
+                                                    }
+                                                    for($a=0;$a<(5-$row['stars']);$a++){
+                                                        $arr.='<svg style="fill:#808080;" class="star" id="1" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" >
+                                                                                     <polygon points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566"></polygon>
+                                                                                 </svg>';
+
+
+                                                    }
+                                                    $arr.='</div>';
+
+                                                    $arr.='<p style="text-align: left">'.$row['review'].'</p>';
+
+
+
+
+                                                    $arr.='</div>';
+
+
+
+
+
+
+                                                }
+
+
+
+
+
+
+
+
+                                                echo '
+                                            <td style="width: 25%;">
+                                                    <div  class="dashboard-items search-items"  >
+                                                    
+                                                        <div style="width:100%;">
+                                                        <div class="h3-search">
+                                                                    Booking Date: '.substr($appodate,0,30).'<br>
+                                                                    Reference Number: OC-000-'.$appoid.'
+                                                                </div>
+                                                                <div class="h1-search">
+                                                                    '.substr($title,0,21).'<br>
+                                                                </div>
+                                                                <div class="h3-search">
+                                                                    Appointment Number:<div class="h1-search">0'.$apponum.'</div>
+                                                                </div>
+                                                                <div class="h3-search">
+                                                                    '.substr($docname,0,30).'
+                                                                </div>
+                                                                
+                                                                
+                                                                <div class="h4-search">
+                                                                    Scheduled Date: '.$scheduledate.'<br>Starts: <b>@'.substr($scheduletime,0,5).'</b> (24h)
+                                                                </div>
+                                                                <br>
+                                                                
+                                                                <form action="comment.php" method="post" class="comment_form">
+                                                                    <input style="display: none" type="text" name="appo_id" value="'.$appoid.'">
+                                                                    <input style="display: none" type="text" value="0" name="stars">
+                                                                    <label style="display: block" for="">Buraya Komment atin</label>
+                                                                                 <div class="review" style="display: block">
+                                                                                    <svg class="star" id="1" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" >
+                                                                                     <polygon points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566"></polygon>
+                                                                                 </svg>
+                                                                                 <svg class="star" id="1" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" >
+                                                                                     <polygon points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566"></polygon>
+                                                                                 </svg>
+                                                                                 <svg class="star" id="1" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve">
+                                                                                     <polygon points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566"></polygon>
+                                                                                 </svg>
+                                                                                 <svg class="star" id="1" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" >
+                                                                                     <polygon points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566"></polygon>
+                                                                                 </svg>
+                                                                                 <svg class="star" id="1" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" >
+                                                                                     <polygon points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566"></polygon>
+                                                                                 </svg>
+                                                                                   </div>
+                                                                               
+                                                                    <textarea class="textarea" name="review" style="display: block" name="" id="" cols="50" rows="10"></textarea>
+                                                                    <input style="display: block" type="submit" name="" id="" value="submit">
+                                                                </form>
+                                                                
+                                                                <div>
+                                                                
+                                                                '.$arr.'
+                                                                
+                                                                </div>
+                                                                
+                                                                    
+                                                                    
+                                                                   
+</div>
+</div>
+                                                                
+                                                                
+                                                              
+                                                        </div>
+                                                                
+                                                    </div>
+                                                </td>';
+                                            }
+
                                         }
                                         echo "</tr>";
-                           
+
                                 // for ( $x=0; $x<$result->num_rows;$x++){
                                 //     $row=$result->fetch_assoc();
                                 //     $appoid=$row["appoid"];
@@ -304,16 +475,16 @@
                                 //     $scheduledate=$row["scheduledate"];
                                 //     $scheduletime=$row["scheduletime"];
                                 //     $pname=$row["pname"];
-                                //     
-                                //     
+                                //
+                                //
                                 //     echo '<tr >
                                 //         <td style="font-weight:600;"> &nbsp;'.
-                                        
+
                                 //         substr($pname,0,25)
                                 //         .'</td >
                                 //         <td style="text-align:center;font-size:23px;font-weight:500; color: var(--btnnicetext);">
                                 //         '.$apponum.'
-                                        
+
                                 //         </td>
                                 //         <td>
                                 //         '.substr($title,0,15).'
@@ -321,46 +492,46 @@
                                 //         <td style="text-align:center;;">
                                 //             '.substr($scheduledate,0,10).' @'.substr($scheduletime,0,5).'
                                 //         </td>
-                                        
+
                                 //         <td style="text-align:center;">
                                 //             '.$appodate.'
                                 //         </td>
 
                                 //         <td>
                                 //         <div style="display:flex;justify-content: center;">
-                                        
+
                                 //         <!--<a href="?action=view&id='.$appoid.'" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-view"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">View</font></button></a>
                                 //        &nbsp;&nbsp;&nbsp;-->
                                 //        <a href="?action=drop&id='.$appoid.'&name='.$pname.'&session='.$title.'&apponum='.$apponum.'" class="non-style-link"><button  class="btn-primary-soft btn button-icon btn-delete"  style="padding-left: 40px;padding-top: 12px;padding-bottom: 12px;margin-top: 10px;"><font class="tn-in-text">Cancel</font></button></a>
                                 //        &nbsp;&nbsp;&nbsp;</div>
                                 //         </td>
                                 //     </tr>';
-                                    
+
                                 }
                             }
-                                 
+
                             ?>
- 
+
                             </tbody>
 
                         </table>
                         </div>
                         </center>
-                   </td> 
+                   </td>
                 </tr>
-                       
-                        
-                        
+
+
+
             </table>
         </div>
     </div>
     <?php
-    
+
     if($_GET){
         $id=$_GET["id"];
         $action=$_GET["action"];
         if($action=='booking-added'){
-            
+
             echo '
             <div id="popup1" class="overlay">
                     <div class="popup">
@@ -384,7 +555,7 @@
         }elseif($action=='drop'){
             $title=$_GET["title"];
             $docname=$_GET["doc"];
-            
+
             echo '
             <div id="popup1" class="overlay">
                     <div class="popup">
@@ -405,7 +576,7 @@
                     </center>
             </div>
             </div>
-            '; 
+            ';
         }elseif($action=='view'){
             $sqlmain= "select * from doctor where docid=?";
             $stmt = $database->prepare($sqlmain);
@@ -416,7 +587,7 @@
             $name=$row["docname"];
             $email=$row["docemail"];
             $spe=$row["specialties"];
-            
+
             $sqlmain= "select sname from specialties where id=?";
             $stmt = $database->prepare($sqlmain);
             $stmt->bind_param("s",$spe);
@@ -514,12 +685,35 @@
                     <br><br>
             </div>
             </div>
-            ';  
+            ';
     }
 }
 
     ?>
     </div>
+
+
+
+<script>
+    $(".review .star").hover(function(){
+        var index=$(this).index();
+        $(this).parents('form').find('[name="stars"]').val(index+1);
+
+       $(this).parents('.review').find('.star').each(function (x, y){
+            $(y).css({
+                fill:"#808080"
+            })
+        })
+
+        $(this).parents('.review').find('.star').each(function (x, y){
+            if(x<=index){
+                $(y).css({
+                    fill:"#f39c12"
+                })
+            }
+        })
+    })
+</script>
 
 </body>
 </html>

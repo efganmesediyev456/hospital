@@ -1,4 +1,4 @@
-<?php
+    <?php
 
     $database= new mysqli("localhost","root","root","hospital");
     if ($database->connect_error){

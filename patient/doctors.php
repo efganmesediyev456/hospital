@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/animations.css">  
-    <link rel="stylesheet" href="../css/main.css">  
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/admin.css">
-        
+
     <title>Doctors</title>
     <style>
         .popup{
@@ -16,7 +16,33 @@
         .sub-table{
             animation: transitionIn-Y-bottom 0.5s;
         }
-</style>
+        .review > *, .stars > *{
+            height: 30px;
+        }
+        .review .star {
+            fill:#808080;
+        }
+
+        .comments{
+            margin-top:12px;
+            border-top:1px solid #f39c12;
+            border-bottom:1px solid #f39c12;
+            padding: 12px 0;
+        }
+        .comments p{
+            color:black;
+            margin: 0;
+            padding: 0;
+        }
+
+       #popup1{
+           overflow: scroll;
+       }
+       #popup1::-webkit-scrollbar{
+           display: none;
+       }
+
+    </style>
 </head>
 <body>
     <?php
@@ -35,7 +61,7 @@
     }else{
         header("location: ../login.php");
     }
-    
+
 
     //import database
     include("../connection.php");
@@ -67,7 +93,7 @@
                             </tr>
                     </table>
                     </td>
-                
+
                 </tr>
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-home " >
@@ -79,7 +105,7 @@
                         <a href="doctors.php" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">All Doctors</p></a></div>
                     </td>
                 </tr>
-                
+
                 <tr class="menu-row" >
                     <td class="menu-btn menu-icon-session">
                         <a href="schedule.php" class="non-style-link-menu"><div><p class="menu-text">Scheduled Sessions</p></div></a>
@@ -95,7 +121,7 @@
                         <a href="settings.php" class="non-style-link-menu"><div><p class="menu-text">Settings</p></a></div>
                     </td>
                 </tr>
-                
+
             </table>
         </div>
         <div class="dash-body">
@@ -105,11 +131,11 @@
                         <a href="doctors.php" ><button  class="login-btn btn-primary-soft btn btn-icon-back"  style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px"><font class="tn-in-text">Back</font></button></a>
                     </td>
                     <td>
-                        
+
                         <form action="" method="post" class="header-search">
 
                             <input type="search" name="search" class="input-text header-searchbar" placeholder="Search Doctor name or Email" list="doctors">&nbsp;&nbsp;
-                            
+
                             <?php
                                 echo '<datalist id="doctors">';
                                 $list11 = $database->query("select  docname,docemail from  doctor;");
@@ -124,19 +150,19 @@
 
                             echo ' </datalist>';
 ?>
-                            
-                       
+
+
                             <input type="Submit" value="Search" class="login-btn btn-primary btn" style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;">
-                        
+
                         </form>
-                        
+
                     </td>
                     <td width="15%">
                         <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: right;">
                             Today's Date
                         </p>
                         <p class="heading-sub12" style="padding: 0;margin: 0;">
-                            <?php 
+                            <?php
                         date_default_timezone_set('Asia/Kolkata');
 
                         $date = date('Y-m-d');
@@ -150,18 +176,18 @@
 
 
                 </tr>
-               
-                
+
+
                 <tr>
                     <td colspan="4" style="padding-top:10px;">
                         <p class="heading-main12" style="margin-left: 45px;font-size:18px;color:rgb(49, 49, 49)">All Doctors (<?php echo $list11->num_rows; ?>)</p>
                     </td>
-                    
+
                 </tr>
                 <?php
                     if($_POST){
                         $keyword=$_POST["search"];
-                        
+
                         $sqlmain= "select * from doctor where docemail='$keyword' or docname='$keyword' or docname like '$keyword%' or docname like '%$keyword' or docname like '%$keyword%'";
                     }else{
                         $sqlmain= "select * from doctor order by docid desc";
@@ -171,7 +197,7 @@
 
 
                 ?>
-                  
+
                 <tr>
                    <td colspan="4">
                        <center>
@@ -180,30 +206,30 @@
                         <thead>
                         <tr>
                                 <th class="table-headin">
-                                    
-                                
+
+
                                 Doctor Name
-                                
+
                                 </th>
                                 <th class="table-headin">
                                     Email
                                 </th>
                                 <th class="table-headin">
-                                    
+
                                     Specialties
-                                    
+
                                 </th>
                                 <th class="table-headin">
-                                    
+
                                     Events
-                                    
+
                                 </tr>
                         </thead>
                         <tbody>
-                        
+
                             <?php
 
-                                
+
                                 $result= $database->query($sqlmain);
 
                                 if($result->num_rows==0){
@@ -221,7 +247,7 @@
                                     <br><br><br><br>
                                     </td>
                                     </tr>';
-                                    
+
                                 }
                                 else{
                                 for ( $x=0; $x<$result->num_rows;$x++){
@@ -253,28 +279,28 @@
                                         </div>
                                         </td>
                                     </tr>';
-                                    
+
                                 }
                             }
-                                 
+
                             ?>
- 
+
                             </tbody>
 
                         </table>
                         </div>
                         </center>
-                   </td> 
+                   </td>
                 </tr>
-                       
-                        
-                        
+
+
+
             </table>
         </div>
     </div>
-    <?php 
+    <?php
     if($_GET){
-        
+
         $id=$_GET["id"];
         $action=$_GET["action"];
         if($action=='drop'){
@@ -309,7 +335,7 @@
             $name=$row["docname"];
             $email=$row["docemail"];
             $spe=$row["specialties"];
-            
+
             $stmt = $database->prepare("select sname from specialties where id=?");
             $stmt->bind_param("s",$spe);
             $stmt->execute();
@@ -318,6 +344,68 @@
             $spcil_name=$spcil_array["sname"];
             $nic=$row['docnic'];
             $tele=$row['doctel'];
+
+
+            $sqls = "SELECT * from doctor JOIN schedule ON doctor.docid = schedule.docid where doctor.docid=".$id;
+
+            $sqls=$database->query($sqls);
+
+            $arrs=[];
+            while ($rowb=$sqls->fetch_assoc()){
+
+                $sqlst = "SELECT * from appointment join comment on comment.appo_id=appointment.appoid where scheduleid= ".$rowb['scheduleid'];
+
+                $sqlst=$database->query($sqlst);
+                while ($rowbb=$sqlst->fetch_assoc()){
+                    $arrs[]=['stars'=>$rowbb['stars'], 'review'=>$rowbb['review']];
+                }
+
+
+
+
+            }
+            $arr='';
+            for($a=0;$a< count($arrs); $a++){
+
+                $arr.='<div class="comments">';
+
+                $arr.='<div class="stars" style="text-align: left">';
+
+                for($i=0;$i<$arrs[$a]['stars'];$i++){
+                    $arr.='<svg style="fill:#f39c12;" class="star" id="1" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" >
+                                                                                     <polygon points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566"></polygon>
+                                                                                 </svg>';
+
+
+                }
+                for($i=0;$i<(5-$arrs[$a]['stars']);$i++){
+                    $arr.='<svg style="fill:#808080;" class="star" id="1" viewBox="0 12.705 512 486.59" x="0px" y="0px" xml:space="preserve" >
+                                                                                     <polygon points="256.814,12.705 317.205,198.566 512.631,198.566 354.529,313.435 414.918,499.295 256.814,384.427 98.713,499.295 159.102,313.435 1,198.566 196.426,198.566"></polygon>
+                                                                                 </svg>';
+
+
+                }
+                $arr.='</div>';
+
+                $arr.='<p style="text-align: left">'.$arrs[$a]['review'].'</p>';
+
+
+
+
+                $arr.='</div>';
+
+            }
+
+
+
+
+
+
+
+
+
+
+
             echo '
             <div id="popup1" class="overlay">
                     <div class="popup">
@@ -390,14 +478,27 @@
                             '.$spcil_name.'<br><br>
                             </td>
                             </tr>
-                            <tr>
+                            
+                             <tr>
                                 <td colspan="2">
-                                    <a href="doctors.php"><input type="button" value="OK" class="login-btn btn-primary-soft btn" ></a>
-                                
-                                    
+                        
+                                    '.$arr.'
+
                                 </td>
                 
                             </tr>
+                            <tr>
+                                <td colspan="2">
+                                       <br>
+                                    <a href="doctors.php"><input type="button" value="OK" class="login-btn btn-primary-soft btn" ></a>
+                                </td>
+                
+                            </tr>
+                            
+                           
+                            
+                            
+                            
                            
 
                         </table>
@@ -442,11 +543,11 @@
             $stmt->execute();
             $result = $stmt->get_result();
             $row=$result->fetch_assoc();
-       
+
             $name=$row["docname"];
             $email=$row["docemail"];
             $spe=$row["specialties"];
-            
+
             $sqlmain= "select sname from specialties where id='?";
             $stmt = $database->prepare($sqlmain);
             $stmt->bind_param("s",$spe);
@@ -543,20 +644,20 @@
                                     <tr>
                                         <td class="label-td" colspan="2">
                                             <select name="spec" id="" class="box">';
-                                                
-                
+
+
                                                 $list11 = $database->query("select  * from  specialties;");
-                
+
                                                 for ($y=0;$y<$list11->num_rows;$y++){
                                                     $row00=$list11->fetch_assoc();
                                                     $sn=$row00["sname"];
                                                     $id00=$row00["id"];
                                                     echo "<option value=".$id00.">$sn</option><br/>";
                                                 };
-                
-                
-                
-                                                
+
+
+
+
                                 echo     '       </select><br><br>
                                         </td>
                                     </tr>
@@ -625,7 +726,7 @@
 
 
 
-        }; 
+        };
     };
 
 ?>
