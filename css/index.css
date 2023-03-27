@@ -1,5 +1,5 @@
 body{
-    background-image: url(../img/bg01.jpg);
+    background-image: url(../img/w1.jpg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -46,7 +46,7 @@ table{
 
 .register-btn{
     background-color: rgba(240, 248, 255, 0.589);
-    color: #345cc4;
+    color: red;
 }
 
 

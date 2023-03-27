@@ -9,5 +9,5 @@ include("../connection.php");
 $sql="insert into comment(stars, review,appo_id) values('$stars','$review','$id')";
 $database->query($sql);
 
-header('Location: /hospital2/hospital/patient/appointment.php');
+header('Location: /hospitalson/hospital/patient/appointment.php');
 
